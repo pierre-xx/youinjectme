@@ -31,7 +31,7 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR, int) {
         ImGui::SetNextWindowSize(ImVec2(base_window_size.x * render.getDpi(), base_window_size.y * render.getDpi()), ImGuiCond_Once);
 
         /* start youinjectme gui */
-        ImGui::Begin("youinjectme v1.0", &show, ImGuiWindowFlags_NoResize);
+        ImGui::Begin("youinjectme v1.1", &show, ImGuiWindowFlags_NoResize);
         if (ImGui::BeginTabBar("Tabs")) {
             if (ImGui::BeginTabItem("injector")) {
                 if (ImGui::BeginTable("InjectorT", 1, ImGuiTableFlags_SizingStretchSame)) {
@@ -49,6 +49,26 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR, int) {
                     if (ImGui::Button("inject dll")) {
                         injector.injectDll(dllName);
                     }
+
+                    ImGui::EndChild();
+                    ImGui::EndTable();
+                }
+                ImGui::EndTabItem();
+            }
+
+            if (ImGui::BeginTabItem("settings")) {
+                if (ImGui::BeginTable("SettingsT", 1, ImGuiTableFlags_SizingStretchSame)) {
+                    ImGui::TableNextColumn();
+                    ImGui::BeginChild("SettingsC", ImVec2(0, 180), true);
+
+                    ImGui::Text("settings");
+                    ImGui::Separator();
+
+                    bool useMM = injector.isManualMap();
+                    if (ImGui::Checkbox("manual map", &useMM)) {
+                        injector.setManualMap(useMM);
+                    }
+
                     ImGui::EndChild();
                     ImGui::EndTable();
                 }

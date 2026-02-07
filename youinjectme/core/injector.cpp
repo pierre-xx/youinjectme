@@ -1,6 +1,5 @@
 #include "injector.h"
 
-
 DWORD Injector::getProcessId(const std::string& name) {
 	std::wstring wName(name.begin(), name.end());
 	DWORD procId = 0;
@@ -21,6 +20,36 @@ DWORD Injector::getProcessId(const std::string& name) {
 	}
 	CloseHandle(hSnap);
 	return procId;
+}
+
+void Injector::injectByRemoteThread() {
+	HANDLE hProc = OpenProcess(PROCESS_ALL_ACCESS, 0, this->pid);
+	if (!hProc || hProc == INVALID_HANDLE_VALUE) {
+		MessageBoxA(NULL, "OpenProcess error", "youinjectme", MB_OK | MB_ICONERROR);
+		return;
+	}
+
+	void* loc = VirtualAllocEx(hProc, 0, MAX_PATH, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
+	const char* c = this->path.string().c_str();
+
+	if (!WriteProcessMemory(hProc, loc, c, strlen(c) + 1, 0)) {
+		MessageBoxA(NULL, "WriteProcessMemory error", "youinjectme", MB_OK | MB_ICONERROR);
+		return;
+	}
+
+	HANDLE hThread = CreateRemoteThread(hProc, 0, 0, (LPTHREAD_START_ROUTINE)LoadLibraryA, loc, 0, 0);
+	if (!hThread) {
+		MessageBoxA(NULL, "CreateRemoteThread error", "youinjectme", MB_OK | MB_ICONERROR);
+		return;
+	}
+
+	if (hThread) {
+		CloseHandle(hThread);
+	}
+
+	if (hProc) {
+		CloseHandle(hProc);
+	}
 }
 
 void Injector::selectDll() {
@@ -77,32 +106,10 @@ void Injector::injectDll(const std::string& name) {
 		return;
 	}
 
-	/* inject */
-	HANDLE hProc = OpenProcess(PROCESS_ALL_ACCESS, 0, this->pid);
-	if (!hProc || hProc == INVALID_HANDLE_VALUE) {
-		MessageBoxA(NULL, "OpenProcess error", "youinjectme", MB_OK | MB_ICONERROR);
-		return;
+	if (this->manualMap) {
+		InjectByManualMapping(this->pid, this->path.string());
 	}
-
-	void* loc = VirtualAllocEx(hProc, 0, MAX_PATH, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
-	const char* c = this->path.string().c_str();
-
-	if (!WriteProcessMemory(hProc, loc, c, strlen(c) + 1, 0)) {
-		MessageBoxA(NULL, "WriteProcessMemory error", "youinjectme", MB_OK | MB_ICONERROR);
-		return;
-	}
-
-	HANDLE hThread = CreateRemoteThread(hProc, 0, 0, (LPTHREAD_START_ROUTINE)LoadLibraryA, loc, 0, 0);
-	if (!hThread) {
-		MessageBoxA(NULL, "CreateRemoteThread error", "youinjectme", MB_OK | MB_ICONERROR);
-		return;
-	}
-
-	if (hThread) {
-		CloseHandle(hThread);
-	}
-
-	if (hProc) {
-		CloseHandle(hProc);
+	else {
+		this->injectByRemoteThread();
 	}
 }

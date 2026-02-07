@@ -48,6 +48,9 @@
     <ClCompile Include="core\renderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="core\manual_map.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="imgui\backends\imgui_impl_dx11.h">
@@ -83,8 +86,12 @@
     <ClInclude Include="core\renderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="core\manual_map.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\README.md" />
+    <None Include="..\LICENSE" />
   </ItemGroup>
 </Project>

@@ -141,6 +141,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="core\manual_map.cpp" />
     <ClCompile Include="imgui\backends\imgui_impl_dx11.cpp" />
     <ClCompile Include="imgui\backends\imgui_impl_win32.cpp" />
     <ClCompile Include="imgui\imgui.cpp" />
@@ -154,6 +155,7 @@
     <ClCompile Include="core\renderer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="core\manual_map.h" />
     <ClInclude Include="imgui\backends\imgui_impl_dx11.h" />
     <ClInclude Include="imgui\backends\imgui_impl_win32.h" />
     <ClInclude Include="imgui\imconfig.h" />
@@ -167,6 +169,7 @@
     <ClInclude Include="core\renderer.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\LICENSE" />
     <None Include="..\README.md" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
