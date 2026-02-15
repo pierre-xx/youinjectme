@@ -107,7 +107,6 @@ void* GetRemoteModuleFunctionAddress(const std::string moduleName,
 
 
 void RelocationStub(RelocationStubParameters* parameters) {
-
 	const auto dosHeader{ reinterpret_cast<IMAGE_DOS_HEADER*>(parameters->remoteDllBaseAddress) };
 	const auto ntHeader{ reinterpret_cast<IMAGE_NT_HEADERS*>(reinterpret_cast<DWORD_PTR>(parameters->remoteDllBaseAddress) + dosHeader->e_lfanew) };
 
@@ -203,7 +202,7 @@ void RelocationStub(RelocationStubParameters* parameters) {
 
 		const auto* tlsCallback{ reinterpret_cast<PIMAGE_TLS_CALLBACK*>(
 			baseTlsEntries->AddressOfCallBacks) };
-		while (tlsCallback != nullptr) {
+		while (tlsCallback && *tlsCallback) {
 			(*tlsCallback)(parameters->remoteDllBaseAddress, DLL_PROCESS_ATTACH,
 				nullptr);
 			tlsCallback++;

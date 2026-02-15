@@ -50,6 +50,8 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR, int) {
                         injector.injectDll(dllName);
                     }
 
+                    ImGui::Text("selected dll: %s", injector.getDllName().c_str());
+
                     ImGui::EndChild();
                     ImGui::EndTable();
                 }

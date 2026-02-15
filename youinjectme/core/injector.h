@@ -19,6 +19,8 @@ public:
 	void selectDll();
 	void injectDll(const std::string& name);
 
+	std::string getDllName() { return this->path.filename().string(); }
+
 	void setManualMap(bool v) { this->manualMap = v; }
 	bool isManualMap() { return this->manualMap; }
 };
